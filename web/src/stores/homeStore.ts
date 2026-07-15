@@ -1,0 +1,1 @@
+import {create} from 'zustand';interface HomeStore {loading:boolean;error:string|null;setLoading:(l:boolean)=>void;setError:(e:string|null)=>void}export const useHomeStore=create<HomeStore>((set)=>({loading:false,error:null,setLoading:(loading)=>set({loading}),setError:(error)=>set({error})}));

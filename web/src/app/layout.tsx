@@ -1,0 +1,1 @@
+import type {Metadata} from 'next';import './globals.css';export const metadata:Metadata={title:'GOFLOW - AI Operating System',description:'The AI Operating System for Thailand'};export default function RootLayout({children}:{children:React.ReactNode;}){return<html lang='th'><body className='bg-white dark:bg-slate-900 text-slate-900 dark:text-white'>{children}</body></html>;}
