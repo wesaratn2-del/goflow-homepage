@@ -1,0 +1,34 @@
+{
+  "revenueStreams": [
+    {
+      "name": "Subscription",
+      "description": "Monthly/Annual plans (Free, Plus, Pro, Creator, Business, Enterprise)",
+      "percentage": 40,
+      "pricing": "149-1,990 THB/month"
+    },
+    {
+      "name": "AI Credits",
+      "description": "Pay-per-use model for AI services",
+      "percentage": 25,
+      "pricing": "Variable by service"
+    },
+    {
+      "name": "Enterprise License",
+      "description": "Custom enterprise deals (White Label, Custom Features)",
+      "percentage": 20,
+      "pricing": "Custom pricing"
+    },
+    {
+      "name": "Creator Marketplace",
+      "description": "Commission on creator sales (Prompts, Agents, Workflows)",
+      "percentage": 10,
+      "commission": "15% GOFLOW, 85% Creator"
+    },
+    {
+      "name": "Professional Services",
+      "description": "Implementation, Training, Consulting",
+      "percentage": 5,
+      "pricing": "Custom pricing"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "featured": [
+    {
+      "id": 1,
+      "name": "GOFLOW AI",
+      "icon": "🤖",
+      "status": "available",
+      "features": ["Chat", "Image", "Video", "Audio", "Document", "Automation"]
+    },
+    {
+      "id": 2,
+      "name": "GOFLOW Political Platform",
+      "icon": "🌻",
+      "status": "available",
+      "features": ["Membership", "Campaign", "Volunteer", "Dashboard"]
+    }
+  ],
+  "comingSoon": [
+    {
+      "id": 3,
+      "name": "GOFLOW Rider",
+      "icon": "🚚",
+      "status": "beta",
+      "eta": "Q4 2026"
+    },
+    {
+      "id": 4,
+      "name": "GOFLOW Market",
+      "icon": "🛒",
+      "status": "development",
+      "eta": "Q1 2027"
+    },
+    {
+      "id": 5,
+      "name": "GOFLOW Agri",
+      "icon": "🌾",
+      "status": "prototype",
+      "eta": "Q2 2027"
+    }
+  ]
+}
