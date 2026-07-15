@@ -1,6 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import { staggerContainer, staggerItem } from '@/lib/animations';
+import { COLORS } from '@/lib/constants';
 import { apiClient } from '@/services/api';
 import type { BusinessModelData } from '@/types';
 
@@ -14,40 +17,79 @@ export default function BusinessModel() {
   if (!data) return null;
 
   return (
-    <section id="business" className="py-20 px-4 bg-gradient-to-b from-slate-900 to-slate-800 text-white">
+    <section className="py-20 px-6 bg-gradient-to-b from-transparent via-green-500/5 to-transparent">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-5xl font-bold mb-4 text-center">{data.title}</h2>
-        <p className="text-xl text-gray-300 text-center mb-16 max-w-2xl mx-auto">
-          {data.message}
-        </p>
+        {/* Header */}
+        <motion.div
+          className="text-center mb-16 space-y-4"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="text-5xl md:text-6xl font-black">
+            <span className="text-gradient">Multiple Revenue Streams</span>
+          </h2>
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            Diversified and sustainable business model
+          </p>
+        </motion.div>
 
-        <div className="grid md:grid-cols-5 gap-6 mb-12">
+        {/* Revenue Cards */}
+        <motion.div
+          className="grid md:grid-cols-5 gap-4 mb-12"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
           {data.revenueStreams.map((stream, idx) => (
-            <div key={idx} className="text-center">
-              <div className="text-5xl mb-4">{stream.icon}</div>
-              <h3 className="text-xl font-bold mb-2">{stream.name}</h3>
-              <p className="text-gray-300 mb-4">{stream.description}</p>
-              <div className="text-3xl font-bold text-blue-400">{stream.percentage}%</div>
-            </div>
+            <motion.div
+              key={idx}
+              variants={staggerItem}
+              whileHover={{ scale: 1.05 }}
+              className="glass rounded-xl p-6 border text-center group cursor-pointer"
+              style={{ borderColor: COLORS.border }}
+            >
+              <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">
+                {stream.icon}
+              </div>
+              <h3 className="font-bold mb-1 text-green-400">{stream.percentage}%</h3>
+              <h4 className="text-sm font-bold mb-2">{stream.name}</h4>
+              <p className="text-xs text-gray-400">{stream.description}</p>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        {/* Visualization */}
-        <div className="bg-slate-800 rounded-xl p-8 border border-slate-700">
-          <div className="grid md:grid-cols-5 gap-3 h-64">
+        {/* Chart Visualization */}
+        <motion.div
+          className="glass rounded-xl p-8 border"
+          style={{ borderColor: COLORS.border }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+        >
+          <div className="flex items-end justify-center gap-2 h-64">
             {data.revenueStreams.map((stream, idx) => (
-              <div
+              <motion.div
                 key={idx}
-                className="bg-gradient-to-t from-blue-600 to-blue-400 rounded-lg opacity-80 hover:opacity-100 transition"
+                className="flex-1 bg-gradient-to-t from-green-500 to-cyan-400 rounded-lg hover:from-green-400 hover:to-cyan-300 transition-all cursor-pointer"
                 style={{
-                  height: `${(stream.percentage / 100) * 100}%`,
-                  alignSelf: 'flex-end',
+                  height: `${(stream.percentage / 40) * 100}%`,
                 }}
+                whileHover={{ scale: 1.05 }}
                 title={`${stream.name}: ${stream.percentage}%`}
               />
             ))}
           </div>
-        </div>
+          <div className="mt-8 grid md:grid-cols-5 gap-4 text-center">
+            {data.revenueStreams.map((stream, idx) => (
+              <div key={idx}>
+                <p className="text-xs text-gray-400 mb-1">{stream.name}</p>
+                <p className="font-bold text-green-400">{stream.percentage}%</p>
+              </div>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -8,25 +8,28 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        slate: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
-          200: '#e2e8f0',
-          300: '#cbd5e1',
-          400: '#94a3b8',
-          500: '#64748b',
-          600: '#475569',
-          700: '#334155',
-          800: '#1e293b',
-          900: '#0f172a',
+        black: '#080B12',
+        'gray': {
+          50: '#F9FAFB',
+          100: '#F3F4F6',
+          200: '#E5E7EB',
+          300: '#D1D5DB',
+          400: '#9CA3AF',
+          500: '#6B7280',
+          600: '#4B5563',
+          700: '#374151',
+          800: '#1F2937',
+          900: '#111827',
         },
       },
+      fontSize: {
+        '7xl': '4.5rem',
+        '8xl': '6rem',
+      },
       animation: {
-        fadeIn: 'fadeIn 0.6s ease-out',
-        fadeInDelay: 'fadeInDelay 1.2s ease-out',
+        'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       },
     },
   },
-  darkMode: 'class',
   plugins: [],
 };

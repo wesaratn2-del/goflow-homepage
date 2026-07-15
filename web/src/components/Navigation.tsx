@@ -1,68 +1,119 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { COLORS } from '@/lib/constants';
+
+const navItems = [
+  { label: 'Products', href: '#products' },
+  { label: 'Solutions', href: '#solutions' },
+  { label: 'Technology', href: '#technology' },
+  { label: 'Pricing', href: '#pricing' },
+  { label: 'Investor', href: '#investor' },
+  { label: 'About', href: '#about' },
+  { label: 'Contact', href: '#contact' },
+];
 
 export default function Navigation() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <nav className="fixed w-full top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-gray-200 dark:border-slate-800">
-      <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+    <motion.nav
+      className={`fixed w-full top-0 z-50 transition-all duration-300 ${
+        isScrolled ? 'glass' : 'bg-transparent'
+      }`}
+      style={{
+        backdropFilter: isScrolled ? 'blur(10px)' : 'none',
+        borderBottom: isScrolled ? `1px solid ${COLORS.border}` : 'none',
+      }}
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.6 }}
+    >
+      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
-          GOFLOW
+        <Link href="/" className="text-2xl font-bold">
+          <span className="text-gradient font-black">GOFLOW</span>
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-8">
-          <a href="#products" className="text-slate-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
-            Products
-          </a>
-          <a href="#why" className="text-slate-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
-            Why GOFLOW
-          </a>
-          <a href="#business" className="text-slate-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
-            Business
-          </a>
-          <a href="#investment" className="text-slate-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
-            Investor
-          </a>
-          <a href="#contact" className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-            Contact
-          </a>
+        <div className="hidden md:flex items-center gap-1">
+          {navItems.map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              className="px-4 py-2 text-sm text-gray-300 hover:text-white transition-colors"
+            >
+              {item.label}
+            </a>
+          ))}
+        </div>
+
+        {/* CTA Buttons */}
+        <div className="hidden md:flex items-center gap-4">
+          <button className="btn btn-outline text-sm px-6 py-2.5">Login</button>
+          <button className="btn btn-primary text-sm px-6 py-2.5">Get Started</button>
         </div>
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="md:hidden flex flex-col gap-1.5"
+          onClick={() => setIsOpen(!isOpen)}
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
+          <div
+            className="w-6 h-0.5 bg-white transition-transform"
+            style={{
+              transform: isOpen ? 'rotate(45deg) translateY(10px)' : 'none',
+            }}
+          />
+          <div
+            className="w-6 h-0.5 bg-white transition-opacity"
+            style={{ opacity: isOpen ? 0 : 1 }}
+          />
+          <div
+            className="w-6 h-0.5 bg-white transition-transform"
+            style={{
+              transform: isOpen ? 'rotate(-45deg) translateY(-10px)' : 'none',
+            }}
+          />
         </button>
       </div>
 
       {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-white dark:bg-slate-800 border-t border-gray-200 dark:border-slate-700">
-          <div className="px-4 py-4 space-y-4">
-            <a href="#products" className="block text-slate-600 dark:text-gray-300 hover:text-blue-600">
-              Products
-            </a>
-            <a href="#why" className="block text-slate-600 dark:text-gray-300 hover:text-blue-600">
-              Why GOFLOW
-            </a>
-            <a href="#business" className="block text-slate-600 dark:text-gray-300 hover:text-blue-600">
-              Business
-            </a>
-            <a href="#investment" className="block text-slate-600 dark:text-gray-300 hover:text-blue-600">
-              Investor
-            </a>
+      {isOpen && (
+        <motion.div
+          className="md:hidden absolute top-full left-0 right-0 glass border-t"
+          style={{ borderColor: COLORS.border }}
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <div className="px-6 py-4 space-y-4">
+            {navItems.map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                className="block text-sm text-gray-300 hover:text-white transition-colors"
+              >
+                {item.label}
+              </a>
+            ))}
+            <div className="pt-4 border-t" style={{ borderColor: COLORS.border }}>
+              <button className="btn btn-primary w-full py-2.5 text-sm">Get Started</button>
+            </div>
           </div>
-        </div>
+        </motion.div>
       )}
-    </nav>
+    </motion.nav>
   );
 }

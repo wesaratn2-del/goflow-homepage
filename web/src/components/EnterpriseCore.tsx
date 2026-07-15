@@ -1,55 +1,77 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { apiClient } from '@/services/api';
-import type { EnterpriseCoreData } from '@/types';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { staggerContainer, staggerItem } from '@/lib/animations';
+import { COLORS } from '@/lib/constants';
+
+const architecture = [
+  { icon: '⚙️', name: 'Enterprise Core', desc: 'Unified infrastructure' },
+  { icon: '🤖', name: 'AI Layer', desc: 'Native AI services' },
+  { icon: '📦', name: 'Products', desc: '5 Commercial products' },
+  { icon: '🛍️', name: 'Marketplace', desc: 'Creator ecosystem' },
+  { icon: '🤝', name: 'Partners', desc: 'Integration network' },
+  { icon: '⚡', name: 'API Platform', desc: 'Developer tools' },
+];
 
 export default function EnterpriseCore() {
-  const [data, setData] = useState<EnterpriseCoreData | null>(null);
-
-  useEffect(() => {
-    apiClient.getEnterpriseCore().then(setData).catch(console.error);
-  }, []);
-
-  if (!data) return null;
-
   return (
-    <section className="py-20 px-4 bg-white dark:bg-slate-900">
+    <section id="solutions" className="py-20 px-6 relative overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-gradient-to-br from-green-500/5 to-transparent rounded-full blur-3xl" />
+      </div>
+
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-5xl font-bold mb-4">{data.title}</h2>
-          <p className="text-2xl text-gray-600 dark:text-gray-300 mb-2">{data.subtitle}</p>
-          <p className="text-lg text-blue-600 dark:text-blue-400">{data.description}</p>
-        </div>
+        {/* Header */}
+        <motion.div
+          className="text-center mb-16 space-y-4"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="text-5xl md:text-6xl font-black">
+            <span className="text-gradient">One Enterprise Core</span>
+          </h2>
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            Five super products built on a unified platform architecture
+          </p>
+        </motion.div>
 
         {/* Architecture Diagram */}
-        <div className="bg-gradient-to-b from-slate-50 to-white dark:from-slate-800 dark:to-slate-900 rounded-2xl p-8 border border-gray-200 dark:border-slate-700">
+        <motion.div
+          className="glass rounded-2xl p-8 md:p-12 border"
+          style={{ borderColor: COLORS.border }}
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
           <div className="space-y-4">
-            {data.architecture.levels.map((level, idx) => (
-              <div key={idx}>
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-2xl">
-                    {level.icon}
-                  </div>
+            {architecture.map((item, idx) => (
+              <React.Fragment key={idx}>
+                <motion.div
+                  variants={staggerItem}
+                  className="glass rounded-xl p-6 border flex items-center gap-4 hover:border-green-500/50 transition-colors"
+                  style={{ borderColor: COLORS.border }}
+                  whileHover={{ x: 10 }}
+                >
+                  <div className="text-4xl">{item.icon}</div>
                   <div className="flex-1">
-                    <h3 className="text-xl font-bold">{level.name}</h3>
-                    <p className="text-gray-600 dark:text-gray-400">{level.description}</p>
+                    <h3 className="text-lg font-bold">{item.name}</h3>
+                    <p className="text-sm text-gray-400">{item.desc}</p>
                   </div>
-                </div>
-                {idx < data.architecture.levels.length - 1 && (
-                  <div className="text-center text-3xl text-gray-400 mb-4">↓</div>
+                </motion.div>
+
+                {idx < architecture.length - 1 && (
+                  <div className="flex justify-center py-2">
+                    <div className="text-2xl text-gray-500">↓</div>
+                  </div>
                 )}
-              </div>
+              </React.Fragment>
             ))}
           </div>
-        </div>
-
-        {/* Message */}
-        <div className="mt-12 text-center">
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            {data.message}
-          </p>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

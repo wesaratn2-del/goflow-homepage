@@ -1,96 +1,129 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import { staggerContainer, staggerItem } from '@/lib/animations';
+import { COLORS } from '@/lib/constants';
 import { apiClient } from '@/services/api';
 import type { ProductsData, Product } from '@/types';
 
-function ProductCard({ product }: { product: Product }) {
+function ProductCard({ product, index }: { product: Product; index: number }) {
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-gray-200 dark:border-slate-700 hover:shadow-xl dark:hover:shadow-2xl dark:hover:shadow-blue-900/20 transition">
-      <div className="text-5xl mb-4">{product.icon}</div>
-      <h3 className="text-2xl font-bold mb-2 dark:text-white">{product.name}</h3>
-      <p className="text-gray-600 dark:text-gray-400 mb-4">{product.description}</p>
-      
-      <div className="mb-4">
-        <span className="inline-block px-4 py-2 rounded-full text-sm font-semibold bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400 border border-blue-300 dark:border-blue-700">
-          {product.statusLabel}
-        </span>
-      </div>
+    <motion.div
+      variants={staggerItem}
+      whileHover={{ y: -8 }}
+      className="glass rounded-xl p-8 border group cursor-pointer"
+      style={{ borderColor: COLORS.border }}
+    >
+      <div className="space-y-4">
+        <div className="text-5xl">{product.icon}</div>
+        <div>
+          <h3 className="text-2xl font-bold mb-2">{product.name}</h3>
+          <p className="text-gray-400">{product.description}</p>
+        </div>
 
-      <div className="mb-6 flex flex-wrap gap-2">
-        {product.features.slice(0, 4).map((feature, idx) => (
-          <span key={idx} className="text-xs px-3 py-1 bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-full">
-            {feature}
+        {/* Status */}
+        <div>
+          <span
+            className="inline-block px-3 py-1.5 rounded-lg text-xs font-semibold"
+            style={{
+              background:
+                product.status === 'available'
+                  ? `${COLORS.primary}20`
+                  : `${COLORS.secondary}20`,
+              color: product.status === 'available' ? COLORS.primary : COLORS.secondary,
+            }}
+          >
+            {product.statusLabel}
           </span>
-        ))}
-        {product.features.length > 4 && (
-          <span className="text-xs px-3 py-1 text-gray-600 dark:text-gray-400">+{product.features.length - 4} more</span>
+        </div>
+
+        {/* Features */}
+        <div className="space-y-3">
+          <p className="text-xs text-gray-500 font-semibold">KEY FEATURES</p>
+          <div className="flex flex-wrap gap-2">
+            {product.features.slice(0, 5).map((feature, idx) => (
+              <span key={idx} className="px-3 py-1.5 bg-gray-800/50 rounded-lg text-xs text-gray-300">
+                {feature}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* CTA */}
+        {product.cta && (
+          <div className="pt-4 border-t" style={{ borderColor: COLORS.border }}>
+            <a href={product.cta[0].href} className="text-sm font-semibold text-green-400 hover:text-green-300 transition-colors">
+              Explore →
+            </a>
+          </div>
         )}
       </div>
-
-      {product.cta && (
-        <div className="flex gap-3 flex-wrap">
-          {product.cta.map((button, idx) => (
-            <a
-              key={idx}
-              href={button.href}
-              className="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
-            >
-              {button.text}
-            </a>
-          ))}
-        </div>
-      )}
-    </div>
+    </motion.div>
   );
 }
 
 export default function Products() {
   const [data, setData] = useState<ProductsData | null>(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    apiClient
-      .getProducts()
-      .then(setData)
-      .catch(console.error)
-      .finally(() => setLoading(false));
+    apiClient.getProducts().then(setData).catch(console.error);
   }, []);
 
-  if (loading) return <div className="py-20 text-center">Loading products...</div>;
   if (!data) return null;
 
   return (
-    <section id="products" className="py-20 px-4 bg-gray-50 dark:bg-slate-800">
+    <section id="products" className="py-20 px-6">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-5xl font-bold mb-4 text-center">Our Products</h2>
-        <p className="text-xl text-gray-600 dark:text-gray-400 text-center mb-16 max-w-2xl mx-auto">
-          GOFLOW Platform มี 5 ผลิตภัณฑ์เชิงพาณิชย์ที่สร้างบน Enterprise Core เดียวกัน
-        </p>
+        {/* Header */}
+        <motion.div
+          className="text-center mb-16 space-y-4"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="text-5xl md:text-6xl font-black">
+            <span className="text-gradient">Commercial Products</span>
+          </h2>
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            Enterprise-grade solutions built for scale
+          </p>
+        </motion.div>
 
         {/* Featured Products */}
-        <div className="mb-20">
-          <h3 className="text-3xl font-bold mb-8 flex items-center gap-2">
-            <span>⭐</span> Available Now
+        <motion.div
+          className="mb-20"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
+          <h3 className="text-2xl font-bold mb-8 flex items-center gap-3">
+            <span className="text-3xl">⭐</span> Available Now
           </h3>
           <div className="grid md:grid-cols-2 gap-8">
-            {data.featured.map((product) => (
-              <ProductCard key={product.id} product={product} />
+            {data.featured.map((product, idx) => (
+              <ProductCard key={product.id} product={product} index={idx} />
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Coming Soon */}
-        <div>
-          <h3 className="text-3xl font-bold mb-8 flex items-center gap-2">
-            <span>🔜</span> Coming Soon
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
+          <h3 className="text-2xl font-bold mb-8 flex items-center gap-3">
+            <span className="text-3xl">🔜</span> Coming Soon
           </h3>
           <div className="grid md:grid-cols-3 gap-8">
-            {data.comingSoon.map((product) => (
-              <ProductCard key={product.id} product={product} />
+            {data.comingSoon.map((product, idx) => (
+              <ProductCard key={product.id} product={product} index={idx + 2} />
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
